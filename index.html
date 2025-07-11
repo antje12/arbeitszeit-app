@@ -3,21 +3,21 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>🕒 Arbeitszeit Tracker</title>
+  <title>💪 Arbeitszeit Tracker</title>
   <link rel="manifest" href="manifest.json" />
-  <meta name="theme-color" content="#121212" />
+  <meta name="theme-color" content="#9c27b0" />
   <link rel="icon" href="icon-192.png" type="image/png" />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <h1>🕒 Arbeitszeit - Dein Name</h1>
+  <h1>💪 Hallo und willkommen, Power-Girl!</h1>
 
-  <button id="installBtn" style="display: none;">📲 App installieren</button>
+  <button id="installBtn" class="installBtn">📲 App downloaden</button>
 
   <div class="zeitAnzeige" id="zeitAnzeige">Startzeit: --:-- | Endzeit: --:-- | Dauer: 0 h 0 m</div>
 
   <div class="aufgabenliste">
-    <h2>Aufgaben</h2>
+    <h2>Deine Aufgaben</h2>
     <div class="checkboxContainer" id="checkboxContainer">
       <label><input type="checkbox" value="Treppen reinigen" /> Treppen reinigen</label>
       <label><input type="checkbox" value="Geländer reinigen" /> Geländer reinigen</label>
@@ -29,30 +29,13 @@
     </div>
   </div>
 
-  <button id="speichernBtn" disabled>Als Textdatei speichern</button>
+  <button id="speichernBtn" disabled>💾 Speichern</button>
 
   <div class="steuerung">
-    <button id="startBtn">Start</button>
-    <button id="stopBtn" disabled>Stopp</button>
+    <button id="startBtn">▶ Start</button>
+    <button id="stopBtn" disabled>⏹ Stopp</button>
   </div>
 
   <script src="script.js"></script>
-  <script>
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('service-worker.js')
-        .then(() => console.log("✅ Service Worker registriert"))
-        .catch(e => console.error("❌ Fehler beim Registrieren:", e));
-    }
-
-    window.addEventListener('load', () => {
-      if (!window.matchMedia('(display-mode: standalone)').matches) {
-        alert("👋 Willkommen! Du kannst die App installieren über den Button oben.");
-      }
-    });
-  </script>
-</body>
-</html>
-
-  </script>
 </body>
 </html>
