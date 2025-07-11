@@ -10,18 +10,14 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-
-  <!-- Begrüßung -->
-  <h1 id="begruessung">💪 Hallo und willkommen, Power‑Girl!</h1>
+  <h1 id="begruessung" style="display: none;">💪 Hallo und willkommen, Power‑Girl!</h1>
   <button id="installBtn" style="display: none;">📲 App downloaden</button>
 
-  <!-- Zeitanzeige -->
   <div class="zeitAnzeige" id="zeitAnzeige">
     Startzeit: --:-- | Endzeit: --:-- | Dauer: 0 h 0 m
   </div>
 
-  <!-- Aufgabenbereich -->
-  <div class="aufgabenliste">
+  <div class="aufgabenliste" id="modus1">
     <h2>Deine Aufgaben</h2>
     <div class="checkboxContainer" id="checkboxContainer">
       <label><input type="checkbox" value="Treppen reinigen"> Treppen reinigen</label>
@@ -34,35 +30,34 @@
     </div>
   </div>
 
-  <!-- Speicher-Button -->
   <button id="speichernBtn" disabled>💾 Speichern</button>
 
-  <!-- Steuerung -->
   <div class="steuerung">
     <button id="startBtn">▶ Start</button>
     <button id="stopBtn" disabled>⏹ Stopp</button>
-    <button id="modusBtn">📊 Modus wechseln</button>
+    <button id="modusBtn">🔁 Modus wechseln</button>
   </div>
 
-  <!-- Auswertungsansicht -->
-  <div id="auswertung" style="display: none;">
-    <table>
+  <div id="modus2" style="display:none; width:100%; max-width:360px;">
+    <h2>Zeiteinträge</h2>
+    <table id="eintragTabelle">
       <thead>
-        <tr>
-          <th>Datum</th>
-          <th>Start</th>
-          <th>Ende</th>
-          <th>Dauer</th>
-          <th>Details</th>
-          <th>Löschen</th>
-        </tr>
+        <tr><th>Datum</th><th>Start</th><th>Ende</th><th>Dauer</th><th>Details</th></tr>
       </thead>
-      <tbody id="eintraegeBody">
-        <!-- Einträge werden hier dynamisch eingefügt -->
-      </tbody>
+      <tbody id="eintragBody"></tbody>
     </table>
-    <div id="offeneStundenAnzeige"></div>
+    <div class="zeitSumme" id="zeitSumme"></div>
   </div>
+
+  <div id="modalDetails" class="modal" style="display:none; position:fixed; top:20%; left:10%; width:80%; background:#333; color:white; padding:20px; border-radius:10px;">
+    <div class="modalContent">
+      <span id="closeModal" style="cursor:pointer; float:right; font-size:20px;">&times;</span>
+      <h3>Aufgaben-Details</h3>
+      <p id="detailText"></p>
+    </div>
+  </div>
+
+  <audio id="alarmSound" src="alarm.mp3" preload="auto"></audio>
 
   <script src="script.js"></script>
 </body>
