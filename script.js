@@ -1,63 +1,63 @@
-// Konstanten & Variablen
-let startZeit, endZeit, erinnerungsTimer;
+let startZeit, endZeit;
+let daten = [];
+let gesamtzeit = [new Date(0)];
 const MONATSZIEL_STUNDEN = 96;
-let daten = JSON.parse(localStorage.getItem("arbeitszeitDaten") || "[]");
 
-// DOM-Elemente
-const startBtn     = document.getElementById("startBtn");
-const stopBtn      = document.getElementById("stopBtn");
+const startBtn = document.getElementById("startBtn");
+const stopBtn = document.getElementById("stopBtn");
 const speichernBtn = document.getElementById("speichernBtn");
-const zeitAnzeige  = document.getElementById("zeitAnzeige");
-const installBtn   = document.getElementById("installBtn");
-const begruessung  = document.getElementById("begruessung");
-const modusBtn     = document.getElementById("modusBtn");
-const auswertung   = document.getElementById("auswertung");
-const tabelleBody  = document.querySelector("#ergebnisTabelle tbody");
-const offeneAnzeige = document.getElementById("offeneStundenAnzeige");
-const alarmAudio   = document.getElementById("alarmTon");
+const zeitAnzeige = document.getElementById("zeitAnzeige");
+const installBtn = document.getElementById("installBtn");
+const begruessung = document.getElementById("begruessung");
+const modusBtn = document.getElementById("modusBtn");
+const auswertung = document.getElementById("auswertung");
+const offeneStundenDiv = document.getElementById("offeneStundenAnzeige");
 
-// Modus (true = Erfassung, false = Auswertung)
 let imErfassungsModus = true;
-
-// Begrüßung & Install-Button nur im Browser
-if (!isInApp()) {
-  begruessung.style.display = "block";
-  installBtn.style.display  = "inline-block";
-}
-
-// Starten
-startBtn.addEventListener("click", () => {
-  startZeit = new Date();
-  updateAnzeige();
-  startBtn.disabled = true;
-  stopBtn.disabled  = false;
-  erinnerungsTimer = setInterval(() => {
-    alarmAudio.play();
-    notify("⏱ Erinnerung", "Du arbeitest seit 15 Minuten.");
-  }, 15 * 60 * 1000);
-});
-
-// Stoppen
-stopBtn.addEventListener("click", () => {
-  endZeit = new Date();
-  updateAnzeige();
-  stopBtn.disabled = true;
-  speichernBtn.disabled = false;
-  clearInterval(erinnerungsTimer);
-  speichernAutomatisch();
-});
-
-// Speichern per Button (optional)
-speichernBtn.addEventListener("click", speichernAutomatisch);
 
 // Modus wechseln
 modusBtn.addEventListener("click", () => {
   imErfassungsModus = !imErfassungsModus;
-  auswertung.style.display = imErfassungsModus ? "none" : "block";
+
+  const aufgabenDiv = document.querySelector(".aufgabenliste");
+  const steuerungDiv = document.querySelector(".steuerung");
+
+  if (imErfassungsModus) {
+    aufgabenDiv.style.display = "block";
+    steuerungDiv.style.display = "flex";
+    speichernBtn.style.display = "block";
+    zeitAnzeige.style.display = "block";
+    begruessung.style.display = "block";
+    auswertung.style.display = "none";
+  } else {
+    aufgabenDiv.style.display = "none";
+    steuerungDiv.style.display = "none";
+    speichernBtn.style.display = "none";
+    zeitAnzeige.style.display = "none";
+    begruessung.style.display = "none";
+    auswertung.style.display = "block";
+    aktualisiere_anzeige();
+  }
 });
 
-// Automatisch speichern
-function speichernAutomatisch() {
+// Start
+startBtn.addEventListener("click", () => {
+  startZeit = new Date();
+  updateAnzeige();
+  startBtn.disabled = true;
+  stopBtn.disabled = false;
+});
+
+// Stopp
+stopBtn.addEventListener("click", () => {
+  endZeit = new Date();
+  updateAnzeige();
+  speichernBtn.disabled = false;
+  stopBtn.disabled = true;
+});
+
+// Speichern
+speichernBtn.addEventListener("click", () => {
   const checked = document.querySelectorAll("#checkboxContainer input:checked");
   const aufgaben = Array.from(checked).map(cb => cb.value).join(", ");
   const dauer = berechneDauer(startZeit, endZeit);
@@ -65,56 +65,23 @@ function speichernAutomatisch() {
   const startStr = startZeit.toLocaleTimeString();
   const endStr = endZeit.toLocaleTimeString();
 
-  const eintrag = [datum, startStr, endStr, dauer, aufgaben];
-  daten.push(eintrag);
-  localStorage.setItem("arbeitszeitDaten", JSON.stringify(daten));
-  renderTabelle();
+  daten.push([datum, startStr, endStr, dauer, aufgaben]);
 
-  // Reset
-  speichernBtn.disabled = true;
+  const diff = Math.max(0, Math.floor((endZeit - startZeit) / 1000));
+  gesamtzeit[0] = new Date(gesamtzeit[0].getTime() + diff * 1000);
+
   startBtn.disabled = false;
+  speichernBtn.disabled = true;
   zeitAnzeige.textContent = "Startzeit: --:-- | Endzeit: --:-- | Dauer: 0 h 0 m";
-  document.querySelectorAll("#checkboxContainer input").forEach(cb => cb.checked = false);
-}
 
-// Tabelle rendern
-function renderTabelle() {
-  tabelleBody.innerHTML = "";
-  let gesamtSekunden = 0;
-  daten.forEach((eintrag, idx) => {
-    const [datum, start, ende, dauer, aufgaben] = eintrag;
-    const zeile = document.createElement("tr");
-    zeile.innerHTML = `
-      <td>${datum}</td>
-      <td>${start}</td>
-      <td>${ende}</td>
-      <td>${dauer}</td>
-      <td><button onclick="zeigeDetails(${idx})">Details</button></td>
-    `;
-    const teile = dauer.match(/(\d+) h (\d+) m/);
-    if (teile) {
-      const [_, h, m] = teile;
-      gesamtSekunden += (+h * 3600 + +m * 60);
-    }
-    tabelleBody.appendChild(zeile);
-  });
-  const gearbeitetStunden = gesamtSekunden / 3600;
-  const offen = Math.max(0, MONATSZIEL_STUNDEN - gearbeitetStunden);
-  offeneAnzeige.textContent = `Gesamtarbeitszeit: ${gearbeitetStunden.toFixed(2)} h | Offene Stunden: ${offen.toFixed(2)} h`;
-}
+  aktualisiere_anzeige();
+});
 
-// Detailanzeige
-window.zeigeDetails = function(idx) {
-  const [, , , , aufgaben] = daten[idx];
-  document.getElementById("detailsInhalt").textContent = aufgaben || "Keine Aufgaben notiert.";
-  document.getElementById("detailsPopup").style.display = "block";
-}
-
-// Anzeige updaten
+// Anzeige aktualisieren
 function updateAnzeige() {
   const startStr = startZeit ? startZeit.toLocaleTimeString() : "--:--";
-  const endStr   = endZeit   ? endZeit.toLocaleTimeString()   : "--:--";
-  const dauer    = (startZeit && endZeit) ? berechneDauer(startZeit, endZeit) : "0 h 0 m";
+  const endStr = endZeit ? endZeit.toLocaleTimeString() : "--:--";
+  const dauer = (startZeit && endZeit) ? berechneDauer(startZeit, endZeit) : "0 h 0 m";
   zeitAnzeige.textContent = `Startzeit: ${startStr} | Endzeit: ${endStr} | Dauer: ${dauer}`;
 }
 
@@ -126,44 +93,71 @@ function berechneDauer(start, end) {
   return `${h} h ${m} m`;
 }
 
-// Benachrichtigung
-function notify(title, body) {
-  if (Notification.permission === "granted") {
-    new Notification(title, { body });
-  } else if (Notification.permission !== "denied") {
-    Notification.requestPermission().then(p => {
-      if (p === "granted") new Notification(title, { body });
+// Tabelle anzeigen & aktualisieren
+function aktualisiere_anzeige() {
+  const tableBody = document.getElementById("eintraegeBody");
+  tableBody.innerHTML = "";
+
+  daten.forEach((eintrag, index) => {
+    const row = document.createElement("tr");
+    eintrag.slice(0, 4).forEach(val => {
+      const td = document.createElement("td");
+      td.textContent = val;
+      row.appendChild(td);
     });
-  }
+
+    const tdDetails = document.createElement("td");
+    const btnDetails = document.createElement("button");
+    btnDetails.textContent = "Details";
+    btnDetails.className = "detailsBtn";
+    btnDetails.onclick = () => zeigeDetails(index);
+    tdDetails.appendChild(btnDetails);
+    row.appendChild(tdDetails);
+
+    const tdLoeschen = document.createElement("td");
+    const btnDel = document.createElement("button");
+    btnDel.textContent = "Löschen";
+    btnDel.className = "loeschenBtn";
+    btnDel.onclick = () => {
+      daten.splice(index, 1);
+      aktualisiere_anzeige();
+    };
+    tdLoeschen.appendChild(btnDel);
+    row.appendChild(tdLoeschen);
+
+    tableBody.appendChild(row);
+  });
+
+  const gearbeitetStunden = gesamtzeit[0].getTime() / 3600000;
+  const offen = Math.max(0, MONATSZIEL_STUNDEN - gearbeitetStunden);
+  offeneStundenDiv.textContent = `Gesamtarbeitszeit: ${gearbeitetStunden.toFixed(2)} h | Offene Stunden: ${offen.toFixed(2)} h`;
 }
 
-// Install-Button Logik
+// Detail-Fenster
+function zeigeDetails(index) {
+  const eintrag = daten[index];
+  alert(`📝 Aufgaben am ${eintrag[0]}:\n\n${eintrag[4]}`);
+}
+
+// App-Install prompt
 let deferredPrompt = null;
 window.addEventListener("beforeinstallprompt", (e) => {
   e.preventDefault();
   deferredPrompt = e;
   installBtn.style.display = "inline-block";
 });
+
 installBtn.addEventListener("click", () => {
   if (!deferredPrompt) return;
   deferredPrompt.prompt();
   deferredPrompt.userChoice.then(() => {
-    begruessung.style.display = "none";
     installBtn.style.display = "none";
+    begruessung.style.display = "none";
   });
 });
 
-// Service Worker
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('service-worker.js')
-    .then(() => console.log("✅ Service Worker registriert"))
-    .catch(e => console.error("❌ SW-Fehler:", e));
-}
-
-// App-Check
-function isInApp() {
-  return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
-}
-
-// Initial anzeigen
-renderTabelle();
+    .then(() => console.log("✅ Service Worker aktiv"))
+    .catch(e => console.error("❌ Fehler bei SW:", e));
+});
