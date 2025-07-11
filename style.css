@@ -16,15 +16,23 @@ h1 {
   text-align: center;
 }
 
-.installBtn {
-  font-size: 18px;
-  padding: 12px 20px;
-  background-color: #9c27b0;
-  color: #fff;
+button {
+  font-size: 16px;
+  padding: 12px;
   border: none;
   border-radius: 8px;
-  margin-bottom: 20px;
   cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+#installBtn {
+  background-color: #9c27b0;
+  color: white;
+  margin-bottom: 20px;
+}
+
+#installBtn:hover {
+  background-color: #7b1fa2;
 }
 
 .zeitAnzeige {
@@ -58,34 +66,38 @@ h1 {
 
 .checkboxContainer label {
   font-size: 17px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .steuerung {
   position: fixed;
-  bottom: 100px;
+  bottom: 90px;
   display: flex;
   justify-content: space-between;
-  gap: 15px;
+  gap: 10px;
   width: 100%;
   max-width: 360px;
-}
-
-#startBtn, #stopBtn {
-  flex: 1;
-  padding: 14px;
-  font-size: 18px;
-  border: none;
-  border-radius: 8px;
-  color: #fff;
-  cursor: pointer;
+  padding: 0 10px;
 }
 
 #startBtn {
   background-color: #4caf50;
+  color: white;
+  flex: 1;
 }
 
 #stopBtn {
   background-color: #f44336;
+  color: white;
+  flex: 1;
+}
+
+#modusBtn {
+  background-color: #3f51b5;
+  color: white;
+  flex: 1;
 }
 
 #speichernBtn {
@@ -98,4 +110,50 @@ h1 {
   border-radius: 8px;
   background-color: #03a9f4;
   color: white;
+}
+
+#speichernBtn:disabled {
+  background-color: #0277bd;
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+#auswertung table {
+  border-collapse: collapse;
+  width: 100%;
+  background-color: #2e2e2e;
+  color: white;
+}
+
+#auswertung th, #auswertung td {
+  padding: 10px;
+  border: 1px solid #444;
+  text-align: center;
+  font-size: 14px;
+}
+
+#auswertung th {
+  background-color: #616161;
+  color: #ffc107;
+}
+
+#detailsPopup button {
+  background-color: #03a9f4;
+  color: white;
+  margin-top: 15px;
+  width: 100%;
+  max-width: 300px;
+}
+
+#detailsPopup h3 {
+  color: #ff9800;
+  margin-bottom: 10px;
+}
+
+#offeneStundenAnzeige {
+  text-align: center;
+  margin-top: 15px;
+  font-size: 16px;
+  font-weight: bold;
+  color: #cddc39;
 }
