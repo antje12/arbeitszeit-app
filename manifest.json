@@ -1,12 +1,21 @@
 {
-  "name": "Arbeitszeit Tracker für Power-Girls",
-  "short_name": "Arbeitszeit",
+  "name": "Starke Mädchen App",
+  "short_name": "MädchenApp",
   "start_url": ".",
   "display": "standalone",
-  "background_color": "#1a1a1a",
-  "theme_color": "#9c27b0",
+  "background_color": "#121212",
+  "theme_color": "#ff69b4",
+  "orientation": "portrait",
   "icons": [
-    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png" },
-    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png" }
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
   ]
 }
