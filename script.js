@@ -1,128 +1,147 @@
-let minutes = 0;
-let seconds = 0;
-let interval = null;
-let isRunning = false;
-let mode = localStorage.getItem('mode') || 'timer';
-let wakeLock = null;
+let startZeit = null, endZeit = null;
+let deferredPrompt;
+const startBtn = document.getElementById("startBtn");
+const stopBtn = document.getElementById("stopBtn");
+const speichernBtn = document.getElementById("speichernBtn");
+const installBtn = document.getElementById("installBtn");
+const begruessung = document.getElementById("begruessung");
+const zeitAnzeige = document.getElementById("zeitAnzeige");
+const modusBtn = document.getElementById("modusBtn");
+const logTabelle = document.getElementById("logTabelle");
+const logBody = document.getElementById("logBody");
+const SPEICHER = "arbeitszeit_logs";
+const START_KEY = "aktive_startzeit";
+const MAX_STUNDEN = 96;
 
-const minutesEl = document.getElementById('minutes');
-const secondsEl = document.getElementById('seconds');
-const startBtn = document.getElementById('startBtn');
-const pauseBtn = document.getElementById('pauseBtn');
-const resetBtn = document.getElementById('resetBtn');
-const toggleModeBtn = document.getElementById('toggleModeBtn');
-const currentModeEl = document.getElementById('currentMode');
-
-// State laden
-function loadState() {
-  const saved = JSON.parse(localStorage.getItem('timerState'));
-  if (saved) {
-    minutes = saved.minutes;
-    seconds = saved.seconds;
-    mode = saved.mode;
-    updateDisplay();
-    currentModeEl.textContent = `Aktueller Modus: ${mode === 'timer' ? 'Timer' : 'Stoppuhr'}`;
-  }
+function isInApp() {
+  return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
 }
 
-// State speichern
-function saveState() {
-  localStorage.setItem('timerState', JSON.stringify({ minutes, seconds, mode }));
-  localStorage.setItem('mode', mode);
+if (!isInApp()) {
+  begruessung.style.display = "block";
+  installBtn.style.display = "inline-block";
 }
 
-function updateDisplay() {
-  minutesEl.textContent = String(minutes).padStart(2, '0');
-  secondsEl.textContent = String(seconds).padStart(2, '0');
-}
+installBtn.addEventListener("click", () => {
+  if (!deferredPrompt) return;
+  deferredPrompt.prompt();
+  deferredPrompt.userChoice.then(() => {
+    begruessung.style.display = installBtn.style.display = "none";
+  });
+});
 
-function tick() {
-  if (mode === 'timer') {
-    if (minutes === 0 && seconds === 0) {
-      clearInterval(interval);
-      isRunning = false;
-      releaseWakeLock();
-      return;
-    }
-    if (seconds === 0) {
-      minutes--;
-      seconds = 59;
-    } else {
-      seconds--;
-    }
-  } else {
-    seconds++;
-    if (seconds === 60) {
-      minutes++;
-      seconds = 0;
-    }
-  }
-  updateDisplay();
-  saveState();
-}
+window.addEventListener("beforeinstallprompt", e => {
+  e.preventDefault();
+  deferredPrompt = e;
+  installBtn.style.display = "inline-block";
+});
 
-startBtn.addEventListener('click', () => {
-  if (!isRunning) {
-    interval = setInterval(tick, 1000);
-    isRunning = true;
-    requestWakeLock();
+window.addEventListener("load", () => {
+  const gespeicherterStart = localStorage.getItem(START_KEY);
+  if (gespeicherterStart) {
+    startZeit = new Date(gespeicherterStart);
+    updateAnzeige();
+    startBtn.disabled = true;
+    stopBtn.disabled = false;
   }
 });
 
-pauseBtn.addEventListener('click', () => {
-  clearInterval(interval);
-  isRunning = false;
-  releaseWakeLock();
+startBtn.addEventListener("click", () => {
+  startZeit = new Date();
+  localStorage.setItem(START_KEY, startZeit.toISOString());
+  updateAnzeige();
+  startBtn.disabled = true;
+  stopBtn.disabled = false;
 });
 
-resetBtn.addEventListener('click', () => {
-  clearInterval(interval);
-  isRunning = false;
-  minutes = 0;
-  seconds = 0;
-  updateDisplay();
-  saveState();
-  releaseWakeLock();
+stopBtn.addEventListener("click", () => {
+  endZeit = new Date();
+  updateAnzeige();
+  stopBtn.disabled = true;
+  speichernBtn.disabled = false;
 });
 
-toggleModeBtn.addEventListener('click', () => {
-  mode = mode === 'timer' ? 'stopwatch' : 'timer';
-  currentModeEl.textContent = `Aktueller Modus: ${mode === 'timer' ? 'Timer' : 'Stoppuhr'}`;
-  resetBtn.click(); // reset on mode switch
-  saveState();
+speichernBtn.addEventListener("click", () => {
+  const checked = [...document.querySelectorAll("#checkboxContainer input:checked")];
+  const aufgaben = checked.map(cb => cb.value).join(", ") || "–";
+  const dauer = berechneDauer(startZeit, endZeit);
+  const datum = startZeit.toLocaleDateString();
+  const startStr = startZeit.toLocaleTimeString();
+  const endStr = endZeit.toLocaleTimeString();
+  const eintrag = { datum, start: startStr, stop: endStr, dauer, aufgaben };
+
+  let logs = JSON.parse(localStorage.getItem(SPEICHER) || "[]");
+  logs.push(eintrag);
+  localStorage.setItem(SPEICHER, JSON.stringify(logs));
+
+  startZeit = endZeit = null;
+  localStorage.removeItem(START_KEY);
+  updateAnzeige();
+  speichernBtn.disabled = true;
+  startBtn.disabled = false;
 });
 
-function requestWakeLock() {
-  if ('wakeLock' in navigator) {
-    navigator.wakeLock.request('screen')
-      .then(lock => {
-        wakeLock = lock;
-        wakeLock.addEventListener('release', () => {
-          console.log('Wake Lock released');
-        });
-      })
-      .catch(err => console.error('Wake Lock Error:', err));
-  }
-}
+modusBtn.addEventListener("click", () => {
+  let logs = JSON.parse(localStorage.getItem(SPEICHER) || "[]");
+  logBody.innerHTML = "";
 
-function releaseWakeLock() {
-  if (wakeLock) {
-    wakeLock.release().then(() => {
-      wakeLock = null;
+  if (logs.length === 0) return alert("Noch keine Einträge vorhanden.");
+
+  const infoDiv = document.getElementById("stundenInfo") || document.createElement("div");
+  infoDiv.id = "stundenInfo";
+  infoDiv.style.marginBottom = "10px";
+  infoDiv.style.color = "#ffc107";
+  infoDiv.style.fontSize = "16px";
+
+  const gesamtMinuten = logs.reduce((sum, e) => {
+    const [h, m] = e.dauer.split(" ").filter(x => x !== "h" && x !== "m").map(Number);
+    return sum + h * 60 + m;
+  }, 0);
+
+  const maxMinuten = MAX_STUNDEN * 60;
+  const verbleibend = Math.max(0, maxMinuten - gesamtMinuten);
+  const vH = Math.floor(verbleibend / 60);
+  const vM = verbleibend % 60;
+
+  infoDiv.textContent = `Verbleibend: ${vH} h ${vM} m von ${MAX_STUNDEN} h 0 m`;
+  logTabelle.insertBefore(infoDiv, logTabelle.children[1]);
+
+  logs.forEach((e, i) => {
+    const row = document.createElement("tr");
+    ["datum", "start", "stop", "dauer"].forEach(k => {
+      const td = document.createElement("td");
+      td.textContent = e[k];
+      row.appendChild(td);
     });
-  }
+    const btn = document.createElement("button");
+    btn.textContent = "Details";
+    btn.className = "detailsBtn";
+    btn.onclick = () => alert(`Aufgaben:\n${e.aufgaben}`);
+    const tdBtn = document.createElement("td");
+    tdBtn.appendChild(btn);
+    row.appendChild(tdBtn);
+    logBody.appendChild(row);
+  });
+
+  logTabelle.style.display = "block";
+});
+
+function updateAnzeige() {
+  const s = startZeit ? startZeit.toLocaleTimeString() : "--:--";
+  const e = endZeit ? endZeit.toLocaleTimeString() : "--:--";
+  const d = (startZeit && endZeit) ? berechneDauer(startZeit, endZeit) : "0 h 0 m";
+  zeitAnzeige.textContent = `Startzeit: ${s} | Endzeit: ${e} | Dauer: ${d}`;
 }
 
-// Alle 30 Sekunden ein Ping, damit die App aktiv bleibt
-setInterval(() => {
-  console.log('App aktiv');
-}, 30000);
+function berechneDauer(a, b) {
+  const diff = Math.max(0, Math.floor((b - a) / 1000));
+  const h = Math.floor(diff / 3600);
+  const m = Math.floor((diff % 3600) / 60);
+  return `${h} h ${m} m`;
+}
 
-// PWA Setup
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('service-worker.js')
-    .then(() => console.log('Service Worker registriert'))
-    .catch(err => console.error('SW Fehler:', err));
+    .then(() => console.log("✅ Service Worker registriert"))
+    .catch(e => console.error("❌ SW-Fehler:", e));
 }
-
-loadState();
