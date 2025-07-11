@@ -4,7 +4,7 @@ const stopBtn = document.getElementById("stopBtn");
 const speichernBtn = document.getElementById("speichernBtn");
 const zeitAnzeige = document.getElementById("zeitAnzeige");
 
-// Start
+// Startzeit erfassen
 startBtn.addEventListener("click", () => {
   startZeit = new Date();
   updateAnzeige();
@@ -12,7 +12,7 @@ startBtn.addEventListener("click", () => {
   stopBtn.disabled = false;
 });
 
-// Stop
+// Endzeit erfassen
 stopBtn.addEventListener("click", () => {
   endZeit = new Date();
   updateAnzeige();
@@ -20,7 +20,7 @@ stopBtn.addEventListener("click", () => {
   speichernBtn.disabled = false;
 });
 
-// Speichern
+// Datei speichern
 speichernBtn.addEventListener("click", () => {
   const checkboxes = document.querySelectorAll("#checkboxContainer input:checked");
   const aufgaben = Array.from(checkboxes).map(cb => cb.value).join(", ");
@@ -55,31 +55,27 @@ function berechneDauer(start, end) {
   return `${h} h ${m} m`;
 }
 
-// === PWA Install ===
+// PWA-Install
 let deferredPrompt;
 const installBtn = document.getElementById("installBtn");
 
 window.addEventListener("beforeinstallprompt", (e) => {
   e.preventDefault();
   deferredPrompt = e;
-  installBtn.style.display = "block";
+  installBtn.style.display = "inline-block";
 });
 
 installBtn.addEventListener("click", () => {
   if (deferredPrompt) {
     deferredPrompt.prompt();
-    deferredPrompt.userChoice.then((choiceResult) => {
-      if (choiceResult.outcome === "accepted") {
-        console.log("✅ App installiert");
-      } else {
-        console.log("❌ Installation abgelehnt");
-      }
+    deferredPrompt.userChoice.then((choice) => {
       installBtn.style.display = "none";
-      deferredPrompt = null;
     });
   }
 });
 
-  const m = Math.floor((diff % 3600) / 60);
-  return `${h} h ${m} m`;
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('service-worker.js')
+    .then(() => console.log("✅ Service Worker registriert"))
+    .catch(e => console.error("❌ Fehler beim Registrieren:", e));
 }
