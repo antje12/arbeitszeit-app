@@ -1,12 +1,11 @@
-const CACHE_NAME = "arbeitszeit-cache-v2";
+const CACHE_NAME = "arbeitszeit-cache-v1";
 const urlsToCache = [
   "index.html",
   "style.css",
   "script.js",
   "manifest.json",
   "icon-192.png",
-  "icon-512.png",
-  "alarm.mp3"
+  "icon-512.png"
 ];
 
 self.addEventListener("install", event => {
@@ -18,13 +17,5 @@ self.addEventListener("install", event => {
 self.addEventListener("fetch", event => {
   event.respondWith(
     caches.match(event.request).then(response => response || fetch(event.request))
-  );
-});
-
-self.addEventListener("activate", event => {
-  event.waitUntil(
-    caches.keys().then(names => 
-      Promise.all(names.filter(n => n !== CACHE_NAME).map(n => caches.delete(n)))
-    )
   );
 });
