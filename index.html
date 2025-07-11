@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>💪 Arbeitszeit Tracker</title>
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#9c27b0" />
+  <link rel="icon" href="icon-192.png" type="image/png" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <h1 id="begruessung" style="display: none;">💪 Hallo und willkommen, Power‑Girl!</h1>
+  <button id="installBtn" style="display: none;">📲 App downloaden</button>
+
+  <!-- Erfassungsmodus -->
+  <div id="erfassungModus">
+    <div class="zeitAnzeige" id="zeitAnzeige">
+      Startzeit: --:-- | Endzeit: --:-- | Dauer: 0 h 0 m
+    </div>
+
+    <div class="aufgabenliste">
+      <h2>Deine Aufgaben</h2>
+      <div class="checkboxContainer" id="checkboxContainer">
+        <label><input type="checkbox" value="Treppen reinigen"> Treppen reinigen</label>
+        <label><input type="checkbox" value="Geländer reinigen"> Geländer reinigen</label>
+        <label><input type="checkbox" value="Türen reinigen"> Türen reinigen</label>
+        <label><input type="checkbox" value="Fenster putzen"> Fenster putzen</label>
+        <label><input type="checkbox" value="Außenwand fegen"> Außenwand fegen</label>
+        <label><input type="checkbox" value="Außentreppen abfegen"> Außentreppen abfegen</label>
+        <label><input type="checkbox" value="Briefkästen abwischen"> Briefkästen abwischen</label>
+      </div>
+    </div>
+
+    <button id="speichernBtn" disabled>💾 Speichern</button>
+    <div class="steuerung">
+      <button id="startBtn">▶ Start</button>
+      <button id="stopBtn" disabled>⏹ Stopp</button>
+    </div>
+  </div>
+
+  <!-- Auswertungsmodus -->
+  <div id="auswertungModus">
+    <h2>🧾 Arbeitszeit-Auswertung</h2>
+    <table id="auswertungTabelle">
+      <thead>
+        <tr>
+          <th>Datum</th>
+          <th>Start</th>
+          <th>Ende</th>
+          <th>Dauer</th>
+          <th>Details</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+    <p id="gesamtzeitAnzeige"></p>
+  </div>
+
+  <button id="modusWechselBtn">🔄 Modus wechseln</button>
+  <script src="script.js"></script>
+</body>
+</html>
