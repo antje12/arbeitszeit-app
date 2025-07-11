@@ -4,6 +4,7 @@ const stopBtn = document.getElementById("stopBtn");
 const speichernBtn = document.getElementById("speichernBtn");
 const zeitAnzeige = document.getElementById("zeitAnzeige");
 
+// Start-Button
 startBtn.addEventListener("click", () => {
   startZeit = new Date();
   updateAnzeige();
@@ -11,6 +12,7 @@ startBtn.addEventListener("click", () => {
   stopBtn.disabled = false;
 });
 
+// Stopp-Button
 stopBtn.addEventListener("click", () => {
   endZeit = new Date();
   updateAnzeige();
@@ -18,6 +20,7 @@ stopBtn.addEventListener("click", () => {
   speichernBtn.disabled = false;
 });
 
+// Speichern-Button
 speichernBtn.addEventListener("click", () => {
   const checkboxes = document.querySelectorAll("#checkboxContainer input:checked");
   const aufgaben = Array.from(checkboxes).map(cb => cb.value).join(", ");
@@ -49,6 +52,35 @@ function updateAnzeige() {
 function berechneDauer(start, end) {
   const diff = Math.max(0, Math.floor((end - start) / 1000));
   const h = Math.floor(diff / 3600);
+  const m = Math.floor((diff % 3600) / 60);
+  return `${h} h ${m} m`;
+}
+
+// ===== PWA INSTALLATION =====
+let deferredPrompt;
+const installBtn = document.getElementById("installBtn");
+
+window.addEventListener("beforeinstallprompt", (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  installBtn.style.display = "block";
+});
+
+installBtn.addEventListener("click", () => {
+  if (deferredPrompt) {
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then((choiceResult) => {
+      if (choiceResult.outcome === "accepted") {
+        console.log("✅ App installiert");
+      } else {
+        console.log("❌ Installation abgelehnt");
+      }
+      installBtn.style.display = "none";
+      deferredPrompt = null;
+    });
+  }
+});
+
   const m = Math.floor((diff % 3600) / 60);
   return `${h} h ${m} m`;
 }
