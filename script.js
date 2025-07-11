@@ -1,5 +1,5 @@
-// Arbeitszeit Tracker Erweiterung
 let startZeit, endZeit, timerInterval, alarmInterval;
+let deferredPrompt;
 let daten = JSON.parse(localStorage.getItem("arbeitszeit")) || [];
 const MONATSZIEL_STUNDEN = 96;
 
@@ -46,26 +46,19 @@ stopBtn.addEventListener("click", () => {
   clearInterval(alarmInterval);
   alarmSound.pause();
   alarmSound.currentTime = 0;
-  autoSpeichern();
+  speichern();
 });
 
-speichernBtn.addEventListener("click", speichernManuell);
+speichernBtn.addEventListener("click", speichern);
 
-function speichernManuell() {
+function speichern() {
   const eintrag = generateEintrag();
   daten.push(eintrag);
   localStorage.setItem("arbeitszeit", JSON.stringify(daten));
+  updateTabelle();
   speichernBtn.disabled = true;
   startBtn.disabled = false;
   zeitAnzeige.textContent = "Startzeit: --:-- | Endzeit: --:-- | Dauer: 0 h 0 m";
-  updateTabelle();
-}
-
-function autoSpeichern() {
-  const eintrag = generateEintrag();
-  daten.push(eintrag);
-  localStorage.setItem("arbeitszeit", JSON.stringify(daten));
-  updateTabelle();
 }
 
 function generateEintrag() {
@@ -105,25 +98,21 @@ modusBtn.addEventListener("click", () => {
 function updateTabelle() {
   eintragBody.innerHTML = "";
   let gesamtSek = 0;
-
-  daten.forEach((eintrag, index) => {
+  daten.forEach(eintrag => {
     const row = document.createElement("tr");
-    const zellen = [eintrag.datum, eintrag.start, eintrag.ende, eintrag.dauer];
-    zellen.forEach(text => {
+    [eintrag.datum, eintrag.start, eintrag.ende, eintrag.dauer].forEach(text => {
       const td = document.createElement("td");
-      td.textContent = text;
-      row.appendChild(td);
+      td.textContent = text; row.appendChild(td)
     });
     const detailBtn = document.createElement("button");
     detailBtn.textContent = "Details";
     detailBtn.onclick = () => {
       detailText.textContent = eintrag.details.join(", ");
-      modalDetails.style.display = "block";
+      modalDetails.style.display = "flex";
     };
     const tdBtn = document.createElement("td");
     tdBtn.appendChild(detailBtn);
     row.appendChild(tdBtn);
-
     eintragBody.appendChild(row);
 
     const match = eintrag.dauer.match(/(\d+) h (\d+) m/);
@@ -137,9 +126,7 @@ function updateTabelle() {
   zeitSumme.textContent = `Gesamtarbeitszeit: ${gearbeitetStunden.toFixed(2)} h | Offene Stunden: ${offen.toFixed(2)} h`;
 }
 
-closeModal.onclick = () => {
-  modalDetails.style.display = "none";
-};
+closeModal.onclick = () => { modalDetails.style.display = "none"; };
 
 window.addEventListener("beforeinstallprompt", (e) => {
   e.preventDefault();
@@ -153,20 +140,20 @@ installBtn.addEventListener("click", () => {
   deferredPrompt.userChoice.then(() => {
     begruessung.style.display = "none";
     installBtn.style.display = "none";
+    deferredPrompt = null;
   });
 });
 
-if ('Notification' in window && Notification.permission !== 'granted') {
+if ('Notification' in window && Notification.permission === 'default') {
   Notification.requestPermission();
 }
+
+window.onload = () => {
+  updateTabelle();
+};
 
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('service-worker.js')
     .then(() => console.log("✅ Service Worker registriert"))
     .catch(e => console.error("❌ SW-Fehler:", e));
 }
-
-// Beim Start: Lade Daten
-window.onload = () => {
-  updateTabelle();
-};
