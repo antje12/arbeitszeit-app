@@ -11,6 +11,9 @@
 <body>
   <h1>🕒 Arbeitszeit - Dein Name</h1>
 
+  <!-- PWA Installationsbutton -->
+  <button id="installBtn" style="display: none;">📲 App installieren</button>
+
   <div class="zeitAnzeige" id="zeitAnzeige">Startzeit: --:-- | Endzeit: --:-- | Dauer: 0 h 0 m</div>
 
   <div class="aufgabenliste">
@@ -40,6 +43,15 @@
         .then(() => console.log("✅ Service Worker registriert"))
         .catch(e => console.error("❌ Fehler beim Registrieren:", e));
     }
+
+    // Willkommen anzeigen (optional)
+    if (!window.matchMedia('(display-mode: standalone)').matches) {
+      alert("👋 Willkommen zur Arbeitszeit-App! Du kannst sie oben installieren.");
+    }
+  </script>
+</body>
+</html>
+
   </script>
 </body>
 </html>
