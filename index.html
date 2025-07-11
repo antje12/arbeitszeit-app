@@ -4,22 +4,20 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>💪 Arbeitszeit Tracker</title>
-  <link rel="manifest" href="manifest.json" />
   <meta name="theme-color" content="#9c27b0" />
+  <link rel="manifest" href="manifest.json" />
   <link rel="icon" href="icon-192.png" type="image/png" />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <h1 id="begruessung" style="display: none;">💪 Hallo und willkommen, Power‑Girl!</h1>
-  <button id="installBtn" style="display: none;">📲 App downloaden</button>
+  <h1 id="begruessung" class="hidden">💪 Hallo und willkommen, Power‑Girl!</h1>
+  <button id="installBtn" class="hidden">📲 App installieren</button>
 
-  <div class="zeitAnzeige" id="zeitAnzeige">
-    Startzeit: --:-- | Endzeit: --:-- | Dauer: 0 h 0 m
-  </div>
+  <div id="zeitAnzeige" class="zeitAnzeige">Startzeit: --:-- | Endzeit: --:-- | Dauer: 0 h 0 m</div>
 
   <div class="aufgabenliste">
     <h2>Deine Aufgaben</h2>
-    <div class="checkboxContainer" id="checkboxContainer">
+    <div id="checkboxContainer" class="checkboxContainer">
       <label><input type="checkbox" value="Treppen reinigen"> Treppen reinigen</label>
       <label><input type="checkbox" value="Geländer reinigen"> Geländer reinigen</label>
       <label><input type="checkbox" value="Türen reinigen"> Türen reinigen</label>
@@ -38,7 +36,7 @@
     <button id="modusBtn">🗂️ Modus wechseln</button>
   </div>
 
-  <div id="logTabelle" style="display: none; margin-top: 20px;">
+  <div id="logTabelle" class="hidden">
     <h2>⏱️ Arbeitsprotokoll</h2>
     <table>
       <thead>
@@ -50,6 +48,7 @@
     </table>
   </div>
 
+  <audio id="pingSound" src="ping.mp3" preload="auto"></audio>
   <script src="script.js"></script>
 </body>
 </html>
