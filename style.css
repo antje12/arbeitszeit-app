@@ -8,139 +8,25 @@ body {
   align-items: center;
   padding: 20px;
 }
-
-h1 {
-  font-size: 26px;
-  margin-bottom: 15px;
-  color: #e91e63;
-  text-align: center;
-}
-
-.installBtn {
+h1 { font-size: 26px; margin-bottom: 15px; color: #e91e63; text-align: center; }
+.installBtn, button {
   font-size: 18px;
-  padding: 12px 20px;
+  padding: 12px;
   background-color: #9c27b0;
   color: #fff;
   border: none;
   border-radius: 8px;
-  margin-bottom: 20px;
+  margin: 5px;
   cursor: pointer;
 }
-
-.zeitAnzeige {
-  font-size: 18px;
-  margin: 10px 0;
-  text-align: center;
-  color: #ffc107;
-}
-
-.aufgabenliste {
-  width: 100%;
-  max-width: 360px;
-  margin: 15px 0;
-}
-
-.aufgabenliste h2 {
-  font-size: 22px;
-  color: #ff9800;
-  margin-bottom: 10px;
-  text-align: center;
-}
-
-.checkboxContainer {
-  background-color: #292929;
-  border-radius: 10px;
-  padding: 15px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.checkboxContainer label {
-  font-size: 17px;
-}
-
-.steuerung {
-  position: fixed;
-  bottom: 100px;
-  display: flex;
-  justify-content: space-between;
-  gap: 15px;
-  width: 100%;
-  max-width: 360px;
-}
-
-#startBtn, #stopBtn, #modusBtn {
-  flex: 1;
-  padding: 14px;
-  font-size: 18px;
-  border: none;
-  border-radius: 8px;
-  color: #fff;
-  cursor: pointer;
-}
-
-#startBtn {
-  background-color: #4caf50;
-}
-
-#stopBtn {
-  background-color: #f44336;
-}
-
-#modusBtn {
-  background-color: #3f51b5;
-}
-
-#speichernBtn {
-  margin-top: 25px;
-  font-size: 16px;
-  padding: 12px;
-  width: 100%;
-  max-width: 360px;
-  border: none;
-  border-radius: 8px;
-  background-color: #03a9f4;
-  color: white;
-}
-
-#eintragTabelle {
-  width: 100%;
-  background: #333;
-  border-collapse: collapse;
-  color: white;
-  margin-top: 10px;
-}
-
-#eintragTabelle th, #eintragTabelle td {
-  border: 1px solid #555;
-  padding: 8px;
-  text-align: center;
-}
-
-#eintragTabelle th {
-  background-color: #555;
-}
-
-.modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.7);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-}
-
-.modalContent {
-  background-color: #222;
-  padding: 20px;
-  border-radius: 10px;
-  width: 80%;
-  max-width: 400px;
-  color: white;
-  text-align: center;
-}
+.zeitAnzeige { font-size: 18px; margin: 10px 0; color: #ffc107; text-align: center; }
+.aufgabenliste { width:100%; max-width:360px; margin:15px 0; }
+.aufgabenliste h2 { font-size:22px; color:#ff9800; margin-bottom:10px; text-align:center; }
+.checkboxContainer { background:#292929; border-radius:10px; padding:15px; display:flex; flex-direction:column; gap:10px; }
+.slider, .steuerung button { width:100%; max-width:360px; }
+.steuerung { position:fixed; bottom:100px; display:flex; justify-content:space-between; gap:15px; width:100%; max-width:360px; }
+#eintragTabelle { width:100%; background:#333; border-collapse:collapse; color:white; margin-top:10px; }
+#eintragTabelle th, td { border:1px solid #555; padding:8px; text-align:center; }
+#eintragTabelle th { background:#555; }
+.modal { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); display:none; justify-content:center; align-items:center; }
+.modalContent { background:#222; padding:20px; border-radius:10px; width:80%; max-width:400px; color:white; text-align:center; }
