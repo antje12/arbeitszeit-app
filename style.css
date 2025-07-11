@@ -16,23 +16,15 @@ h1 {
   text-align: center;
 }
 
-button {
-  font-size: 16px;
-  padding: 12px;
+.installBtn {
+  font-size: 18px;
+  padding: 12px 20px;
+  background-color: #9c27b0;
+  color: #fff;
   border: none;
   border-radius: 8px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-#installBtn {
-  background-color: #9c27b0;
-  color: white;
   margin-bottom: 20px;
-}
-
-#installBtn:hover {
-  background-color: #7b1fa2;
+  cursor: pointer;
 }
 
 .zeitAnzeige {
@@ -66,38 +58,38 @@ button {
 
 .checkboxContainer label {
   font-size: 17px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
 }
 
 .steuerung {
   position: fixed;
-  bottom: 90px;
+  bottom: 100px;
   display: flex;
   justify-content: space-between;
-  gap: 10px;
+  gap: 15px;
   width: 100%;
   max-width: 360px;
-  padding: 0 10px;
+}
+
+#startBtn, #stopBtn, #modusBtn {
+  flex: 1;
+  padding: 14px;
+  font-size: 18px;
+  border: none;
+  border-radius: 8px;
+  color: #fff;
+  cursor: pointer;
 }
 
 #startBtn {
   background-color: #4caf50;
-  color: white;
-  flex: 1;
 }
 
 #stopBtn {
   background-color: #f44336;
-  color: white;
-  flex: 1;
 }
 
 #modusBtn {
   background-color: #3f51b5;
-  color: white;
-  flex: 1;
 }
 
 #speichernBtn {
@@ -112,48 +104,43 @@ button {
   color: white;
 }
 
-#speichernBtn:disabled {
-  background-color: #0277bd;
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-#auswertung table {
+#eintragTabelle {
+  width: 100%;
+  background: #333;
   border-collapse: collapse;
-  width: 100%;
-  background-color: #2e2e2e;
   color: white;
+  margin-top: 10px;
 }
 
-#auswertung th, #auswertung td {
-  padding: 10px;
-  border: 1px solid #444;
+#eintragTabelle th, #eintragTabelle td {
+  border: 1px solid #555;
+  padding: 8px;
   text-align: center;
-  font-size: 14px;
 }
 
-#auswertung th {
-  background-color: #616161;
-  color: #ffc107;
+#eintragTabelle th {
+  background-color: #555;
 }
 
-#detailsPopup button {
-  background-color: #03a9f4;
-  color: white;
-  margin-top: 15px;
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
   width: 100%;
-  max-width: 300px;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
 }
 
-#detailsPopup h3 {
-  color: #ff9800;
-  margin-bottom: 10px;
-}
-
-#offeneStundenAnzeige {
+.modalContent {
+  background-color: #222;
+  padding: 20px;
+  border-radius: 10px;
+  width: 80%;
+  max-width: 400px;
+  color: white;
   text-align: center;
-  margin-top: 15px;
-  font-size: 16px;
-  font-weight: bold;
-  color: #cddc39;
 }
