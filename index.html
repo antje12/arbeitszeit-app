@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🕒 Arbeitszeit Tracker</title>
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#121212" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <h1>🕒 Arbeitszeit - Dein Name</h1>
+
+  <div class="zeitAnzeige" id="zeitAnzeige">Startzeit: --:-- | Endzeit: --:-- | Dauer: 0 h 0 m</div>
+
+  <div class="aufgabenliste">
+    <h2>Aufgaben</h2>
+    <div class="checkboxContainer" id="checkboxContainer">
+      <label><input type="checkbox" value="Treppen reinigen" /> Treppen reinigen</label>
+      <label><input type="checkbox" value="Geländer reinigen" /> Geländer reinigen</label>
+      <label><input type="checkbox" value="Türen reinigen" /> Türen reinigen</label>
+      <label><input type="checkbox" value="Fenster putzen" /> Fenster putzen</label>
+      <label><input type="checkbox" value="Außenwand fegen" /> Außenwand fegen</label>
+      <label><input type="checkbox" value="Außentreppen abfegen" /> Außentreppen abfegen</label>
+      <label><input type="checkbox" value="Briefkästen abwischen" /> Briefkästen abwischen</label>
+    </div>
+  </div>
+
+  <button id="speichernBtn" disabled>Als Textdatei speichern</button>
+
+  <div class="steuerung">
+    <button id="startBtn">Start</button>
+    <button id="stopBtn" disabled>Stopp</button>
+  </div>
+
+  <script src="script.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('service-worker.js')
+        .then(() => console.log("✅ Service Worker registriert"))
+        .catch(e => console.error("❌ Fehler beim Registrieren:", e));
+    }
+  </script>
+</body>
+</html>

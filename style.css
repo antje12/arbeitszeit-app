@@ -1,0 +1,87 @@
+body {
+  margin: 0;
+  background-color: #121212;
+  color: #ffffff;
+  font-family: Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 15px;
+}
+
+h1 {
+  text-align: center;
+  font-size: 28px;
+  margin-bottom: 15px;
+}
+
+.zeitAnzeige {
+  font-size: 20px;
+  text-align: center;
+  margin: 10px 0;
+}
+
+.aufgabenliste {
+  width: 100%;
+  max-width: 360px;
+  margin: 15px 0;
+  text-align: center;
+}
+
+.aufgabenliste h2 {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.checkboxContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: flex-start;
+  background-color: #1e1e1e;
+  padding: 15px;
+  border-radius: 8px;
+}
+
+.checkboxContainer label {
+  font-size: 18px;
+}
+
+.steuerung {
+  position: fixed;
+  bottom: 90px;
+  width: 100%;
+  max-width: 360px;
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+#startBtn, #stopBtn {
+  font-size: 20px;
+  padding: 15px;
+  border: none;
+  border-radius: 8px;
+  flex: 1;
+  color: #fff;
+}
+
+#startBtn {
+  background-color: #4CAF50;
+}
+
+#stopBtn {
+  background-color: #F44336;
+}
+
+#speichernBtn {
+  margin-top: 25px;
+  font-size: 18px;
+  padding: 12px;
+  width: 100%;
+  max-width: 360px;
+  border: none;
+  border-radius: 8px;
+  background-color: #2196F3;
+  color: white;
+}
