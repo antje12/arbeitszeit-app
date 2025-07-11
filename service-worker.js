@@ -1,21 +1,22 @@
-const CACHE_NAME = "arbeitszeit-cache-v1";
-const urlsToCache = [
-  "index.html",
-  "style.css",
-  "script.js",
-  "manifest.json",
-  "icon-192.png",
-  "icon-512.png"
-];
-
-self.addEventListener("install", event => {
-  event.waitUntil(
-    caches.open(CACHE_NAME).then(cache => cache.addAll(urlsToCache))
+self.addEventListener('install', (e) => {
+  console.log('[ServiceWorker] Installiert');
+  e.waitUntil(
+    caches.open('maedchen-cache-v1').then((cache) => {
+      return cache.addAll([
+        './',
+        './index.html',
+        './manifest.json',
+        './icons/icon-192.png',
+        './icons/icon-512.png'
+      ]);
+    })
   );
 });
 
-self.addEventListener("fetch", event => {
-  event.respondWith(
-    caches.match(event.request).then(response => response || fetch(event.request))
+self.addEventListener('fetch', (e) => {
+  e.respondWith(
+    caches.match(e.request).then((response) => {
+      return response || fetch(e.request);
+    })
   );
 });
