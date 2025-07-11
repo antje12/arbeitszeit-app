@@ -1,7 +1,7 @@
 body {
   margin: 0;
-  background-color: #1a1a1a;
-  color: #fff;
+  background-color: #121212; /* Tiefdunkler Hintergrund */
+  color: #E0E0E0;            /* Helles Grau für Text */
   font-family: 'Segoe UI', sans-serif;
   display: flex;
   flex-direction: column;
@@ -9,7 +9,12 @@ body {
   padding: 20px;
 }
 
-h1 { font-size: 26px; margin-bottom: 15px; color: #e91e63; text-align: center; }
+h1 {
+  font-size: 26px;
+  margin-bottom: 15px;
+  color: #FF6F61; /* Sanftes Rot-Koralle für Titel */
+  text-align: center;
+}
 
 button {
   font-size: 18px;
@@ -21,82 +26,96 @@ button {
   cursor: pointer;
 }
 
-#installBtn { background-color: #9c27b0; }
-#startBtn { background-color: #4caf50; }
-#stopBtn { background-color: #f44336; }
-#speichernBtn { background-color: #03a9f4; width:100%; max-width:360px; }
+#installBtn {
+  background-color: #8E44AD; /* Satteres Lila */
+}
+
+#startBtn {
+  background-color: #43A047; /* Dunkleres, edleres Grün */
+}
+
+#stopBtn {
+  background-color: #E53935; /* Kräftiges Rot */
+}
+
+#speichernBtn {
+  background-color: #0288D1; /* Tieferes Blau */
+  width: 100%;
+  max-width: 360px;
+}
 
 .zeitAnzeige {
   font-size: 18px;
   margin: 10px;
-  color: #ffc107;
+  color: #FFC107; /* Goldgelb */
   text-align: center;
 }
 
 .aufgabenliste {
-  width:100%;
-  max-width:360px;
-  margin:15px 0;
+  width: 100%;
+  max-width: 360px;
+  margin: 15px 0;
 }
 
 .aufgabenliste h2 {
-  font-size:22px;
-  color:#ff9800;
-  text-align:center;
-  margin-bottom:10px;
+  font-size: 22px;
+  color: #FFA000; /* Satteres Orange */
+  text-align: center;
+  margin-bottom: 10px;
 }
 
 .checkboxContainer {
-  background:#292929;
-  border-radius:10px;
-  padding:15px;
-  display:flex;
-  flex-direction:column;
-  gap:10px;
+  background: #1F1F1F; /* Weniger "flaches" Schwarz */
+  border-radius: 10px;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .checkboxContainer label {
-  font-size:17px;
+  font-size: 17px;
 }
 
 .steuerung {
-  width:100%;
-  max-width:360px;
-  display:flex;
-  justify-content:space-between;
-  gap:5px;
+  width: 100%;
+  max-width: 360px;
+  display: flex;
+  justify-content: space-between;
+  gap: 5px;
 }
 
 #logTabelle {
-  width:100%;
-  max-width:360px;
+  width: 100%;
+  max-width: 360px;
 }
 
 #logTabelle table {
-  width:100%;
-  border-collapse:collapse;
-  background:#292929;
-  border-radius:10px;
-  overflow:hidden;
+  width: 100%;
+  border-collapse: collapse;
+  background: #1F1F1F;
+  border-radius: 10px;
+  overflow: hidden;
 }
 
 #logTabelle th, #logTabelle td {
-  padding:8px;
-  font-size:14px;
-  text-align:left;
+  padding: 8px;
+  font-size: 14px;
+  text-align: left;
 }
 
 #logTabelle th {
-  background:#414141;
+  background: #2C2C2C;     /* Dunkles Grau statt plattes Schwarz */
+  color: #FFCA28;          /* Sanftes Gelb */
 }
 
 #logTabelle td {
-  border-top:1px solid #414141;
+  border-top: 1px solid #333;
 }
 
 .detailsBtn {
-  background:#03a9f4;
-  font-size:14px;
-  padding:4px 8px;
-  border-radius:5px;
+  background: #0288D1;
+  font-size: 14px;
+  padding: 4px 8px;
+  border-radius: 5px;
 }
