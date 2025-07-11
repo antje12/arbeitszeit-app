@@ -1,11 +1,10 @@
 {
-  "name": "Zeitmesser App",
-  "short_name": "Zeitmesser",
-  "start_url": "index.html",
+  "name": "Arbeitszeit Tracker für Power-Girls",
+  "short_name": "Arbeitszeit",
+  "start_url": ".",
   "display": "standalone",
-  "background_color": "#000000",
-  "theme_color": "#000000",
-  "orientation": "portrait",
+  "background_color": "#1a1a1a",
+  "theme_color": "#9c27b0",
   "icons": [
     {
       "src": "icon-192.png",
