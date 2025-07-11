@@ -1,4 +1,4 @@
-let startZeit = null, endZeit = null;
+let startZeit, endZeit;
 let deferredPrompt;
 const startBtn = document.getElementById("startBtn");
 const stopBtn = document.getElementById("stopBtn");
@@ -9,12 +9,14 @@ const zeitAnzeige = document.getElementById("zeitAnzeige");
 const modusBtn = document.getElementById("modusBtn");
 const logTabelle = document.getElementById("logTabelle");
 const logBody = document.getElementById("logBody");
+const kontingentAnzeige = document.getElementById("kontingentAnzeige");
 const SPEICHER = "arbeitszeit_logs";
-const START_KEY = "aktive_startzeit";
+
 const MAX_STUNDEN = 96;
 
 function isInApp() {
-  return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+  return window.matchMedia('(display-mode: standalone)').matches
+         || window.navigator.standalone === true;
 }
 
 if (!isInApp()) {
@@ -36,19 +38,8 @@ window.addEventListener("beforeinstallprompt", e => {
   installBtn.style.display = "inline-block";
 });
 
-window.addEventListener("load", () => {
-  const gespeicherterStart = localStorage.getItem(START_KEY);
-  if (gespeicherterStart) {
-    startZeit = new Date(gespeicherterStart);
-    updateAnzeige();
-    startBtn.disabled = true;
-    stopBtn.disabled = false;
-  }
-});
-
 startBtn.addEventListener("click", () => {
   startZeit = new Date();
-  localStorage.setItem(START_KEY, startZeit.toISOString());
   updateAnzeige();
   startBtn.disabled = true;
   stopBtn.disabled = false;
@@ -69,46 +60,22 @@ speichernBtn.addEventListener("click", () => {
   const startStr = startZeit.toLocaleTimeString();
   const endStr = endZeit.toLocaleTimeString();
   const eintrag = { datum, start: startStr, stop: endStr, dauer, aufgaben };
-
   let logs = JSON.parse(localStorage.getItem(SPEICHER) || "[]");
   logs.push(eintrag);
   localStorage.setItem(SPEICHER, JSON.stringify(logs));
-
-  startZeit = endZeit = null;
-  localStorage.removeItem(START_KEY);
-  updateAnzeige();
   speichernBtn.disabled = true;
   startBtn.disabled = false;
+  zeitAnzeige.textContent = "Startzeit: --:-- | Endzeit: --:-- | Dauer: 0 h 0 m";
+  aktualisiereKontingent();
 });
 
 modusBtn.addEventListener("click", () => {
   let logs = JSON.parse(localStorage.getItem(SPEICHER) || "[]");
   logBody.innerHTML = "";
-
   if (logs.length === 0) return alert("Noch keine Einträge vorhanden.");
-
-  const infoDiv = document.getElementById("stundenInfo") || document.createElement("div");
-  infoDiv.id = "stundenInfo";
-  infoDiv.style.marginBottom = "10px";
-  infoDiv.style.color = "#ffc107";
-  infoDiv.style.fontSize = "16px";
-
-  const gesamtMinuten = logs.reduce((sum, e) => {
-    const [h, m] = e.dauer.split(" ").filter(x => x !== "h" && x !== "m").map(Number);
-    return sum + h * 60 + m;
-  }, 0);
-
-  const maxMinuten = MAX_STUNDEN * 60;
-  const verbleibend = Math.max(0, maxMinuten - gesamtMinuten);
-  const vH = Math.floor(verbleibend / 60);
-  const vM = verbleibend % 60;
-
-  infoDiv.textContent = `Verbleibend: ${vH} h ${vM} m von ${MAX_STUNDEN} h 0 m`;
-  logTabelle.insertBefore(infoDiv, logTabelle.children[1]);
-
   logs.forEach((e, i) => {
     const row = document.createElement("tr");
-    ["datum", "start", "stop", "dauer"].forEach(k => {
+    ["datum","start","stop","dauer"].forEach(k => {
       const td = document.createElement("td");
       td.textContent = e[k];
       row.appendChild(td);
@@ -122,7 +89,6 @@ modusBtn.addEventListener("click", () => {
     row.appendChild(tdBtn);
     logBody.appendChild(row);
   });
-
   logTabelle.style.display = "block";
 });
 
@@ -139,6 +105,30 @@ function berechneDauer(a, b) {
   const m = Math.floor((diff % 3600) / 60);
   return `${h} h ${m} m`;
 }
+
+function berechneGesamtzeit(logs) {
+  let totalSek = 0;
+  logs.forEach(e => {
+    const parts = e.dauer.match(/(\d+) h (\d+) m/);
+    if (parts) {
+      const h = parseInt(parts[1], 10);
+      const m = parseInt(parts[2], 10);
+      totalSek += h * 3600 + m * 60;
+    }
+  });
+  return totalSek;
+}
+
+function aktualisiereKontingent() {
+  const logs = JSON.parse(localStorage.getItem(SPEICHER) || "[]");
+  const gesamtSek = berechneGesamtzeit(logs);
+  const verbleibSek = Math.max(0, MAX_STUNDEN * 3600 - gesamtSek);
+  const h = Math.floor(verbleibSek / 3600);
+  const m = Math.floor((verbleibSek % 3600) / 60);
+  kontingentAnzeige.textContent = `🧮 Verbleibendes Kontingent: ${h} h ${m} m von ${MAX_STUNDEN} h`;
+}
+
+aktualisiereKontingent();
 
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('service-worker.js')
