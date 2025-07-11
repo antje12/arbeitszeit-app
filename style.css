@@ -1,87 +1,101 @@
 body {
   margin: 0;
-  background-color: #121212;
-  color: #ffffff;
-  font-family: Arial, sans-serif;
+  background-color: #1a1a1a;
+  color: #fff;
+  font-family: 'Segoe UI', sans-serif;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 15px;
+  padding: 20px;
 }
 
 h1 {
-  text-align: center;
-  font-size: 28px;
+  font-size: 26px;
   margin-bottom: 15px;
+  color: #e91e63;
+  text-align: center;
+}
+
+.installBtn {
+  font-size: 18px;
+  padding: 12px 20px;
+  background-color: #9c27b0;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  cursor: pointer;
 }
 
 .zeitAnzeige {
-  font-size: 20px;
-  text-align: center;
+  font-size: 18px;
   margin: 10px 0;
+  text-align: center;
+  color: #ffc107;
 }
 
 .aufgabenliste {
   width: 100%;
   max-width: 360px;
   margin: 15px 0;
-  text-align: center;
 }
 
 .aufgabenliste h2 {
-  font-size: 24px;
+  font-size: 22px;
+  color: #ff9800;
   margin-bottom: 10px;
+  text-align: center;
 }
 
 .checkboxContainer {
+  background-color: #292929;
+  border-radius: 10px;
+  padding: 15px;
   display: flex;
   flex-direction: column;
   gap: 10px;
-  align-items: flex-start;
-  background-color: #1e1e1e;
-  padding: 15px;
-  border-radius: 8px;
 }
 
 .checkboxContainer label {
-  font-size: 18px;
+  font-size: 17px;
 }
 
 .steuerung {
   position: fixed;
-  bottom: 90px;
-  width: 100%;
-  max-width: 360px;
+  bottom: 100px;
   display: flex;
   justify-content: space-between;
-  gap: 20px;
+  gap: 15px;
+  width: 100%;
+  max-width: 360px;
 }
 
 #startBtn, #stopBtn {
-  font-size: 20px;
-  padding: 15px;
+  flex: 1;
+  padding: 14px;
+  font-size: 18px;
   border: none;
   border-radius: 8px;
-  flex: 1;
   color: #fff;
+  cursor: pointer;
 }
 
 #startBtn {
-  background-color: #4CAF50;
+  background-color: #4caf50;
 }
 
 #stopBtn {
-  background-color: #F44336;
+  background-color: #f44336;
 }
 
 #speichernBtn {
   margin-top: 25px;
-  font-size: 18px;
+  font-size: 16px;
   padding: 12px;
   width: 100%;
   max-width: 360px;
   border: none;
   border-radius: 8px;
-  background-color: #2196F3;
+  background-color: #03a9f4;
   color: white;
 }
