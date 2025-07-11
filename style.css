@@ -8,25 +8,36 @@ body {
   align-items: center;
   padding: 20px;
 }
+
 h1 { font-size: 26px; margin-bottom: 15px; color: #e91e63; text-align: center; }
-.installBtn, button {
+
+button {
   font-size: 18px;
   padding: 12px;
-  background-color: #9c27b0;
+  margin: 5px;
   color: #fff;
   border: none;
   border-radius: 8px;
-  margin: 5px;
   cursor: pointer;
 }
-.zeitAnzeige { font-size: 18px; margin: 10px 0; color: #ffc107; text-align: center; }
+
+#installBtn { background-color: #9c27b0; }
+#startBtn { background-color: #4caf50; }
+#stopBtn { background-color: #f44336; }
+#speichernBtn { background-color: #03a9f4; width:100%; max-width:360px; }
+
+.zeitAnzeige { font-size: 18px; margin: 10px; color: #ffc107; text-align: center; }
 .aufgabenliste { width:100%; max-width:360px; margin:15px 0; }
-.aufgabenliste h2 { font-size:22px; color:#ff9800; margin-bottom:10px; text-align:center; }
+.aufgabenliste h2 { font-size:22px; color:#ff9800; text-align:center; margin-bottom:10px; }
 .checkboxContainer { background:#292929; border-radius:10px; padding:15px; display:flex; flex-direction:column; gap:10px; }
-.slider, .steuerung button { width:100%; max-width:360px; }
-.steuerung { position:fixed; bottom:100px; display:flex; justify-content:space-between; gap:15px; width:100%; max-width:360px; }
-#eintragTabelle { width:100%; background:#333; border-collapse:collapse; color:white; margin-top:10px; }
-#eintragTabelle th, td { border:1px solid #555; padding:8px; text-align:center; }
-#eintragTabelle th { background:#555; }
-.modal { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); display:none; justify-content:center; align-items:center; }
-.modalContent { background:#222; padding:20px; border-radius:10px; width:80%; max-width:400px; color:white; text-align:center; }
+.checkboxContainer label { font-size:17px; }
+
+.steuerung { width:100%; max-width:360px; display:flex; justify-content:space-between; gap:5px; }
+
+#logTabelle { width:100%; max-width:360px; }
+#logTabelle table { width:100%; border-collapse:collapse; background:#292929; border-radius:10px; overflow:hidden; }
+#logTabelle th, #logTabelle td { padding:8px; font-size:14px; text-align:left; }
+#logTabelle th { background:#414141; }
+#logTabelle td { border-top:1px solid #414141; }
+
+.detailsBtn { background:#03a9f4; font-size:14px; padding:4px 8px; border-radius:5px; }
