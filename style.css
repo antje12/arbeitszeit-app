@@ -1,0 +1,101 @@
+body {
+  margin: 0;
+  background-color: #1a1a1a;
+  color: #fff;
+  font-family: 'Segoe UI', sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+}
+
+h1 {
+  font-size: 26px;
+  margin-bottom: 15px;
+  color: #e91e63;
+  text-align: center;
+}
+
+.installBtn {
+  font-size: 18px;
+  padding: 12px 20px;
+  background-color: #9c27b0;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  cursor: pointer;
+}
+
+.zeitAnzeige {
+  font-size: 18px;
+  margin: 10px 0;
+  text-align: center;
+  color: #ffc107;
+}
+
+.aufgabenliste {
+  width: 100%;
+  max-width: 360px;
+  margin: 15px 0;
+}
+
+.aufgabenliste h2 {
+  font-size: 22px;
+  color: #ff9800;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.checkboxContainer {
+  background-color: #292929;
+  border-radius: 10px;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.checkboxContainer label {
+  font-size: 17px;
+}
+
+.steuerung {
+  position: fixed;
+  bottom: 100px;
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  width: 100%;
+  max-width: 360px;
+}
+
+#startBtn, #stopBtn {
+  flex: 1;
+  padding: 14px;
+  font-size: 18px;
+  border: none;
+  border-radius: 8px;
+  color: #fff;
+  cursor: pointer;
+}
+
+#startBtn {
+  background-color: #4caf50;
+}
+
+#stopBtn {
+  background-color: #f44336;
+}
+
+#speichernBtn {
+  margin-top: 25px;
+  font-size: 16px;
+  padding: 12px;
+  width: 100%;
+  max-width: 360px;
+  border: none;
+  border-radius: 8px;
+  background-color: #03a9f4;
+  color: white;
+}
