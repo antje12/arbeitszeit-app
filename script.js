@@ -1,123 +1,128 @@
-let startZeit, endZeit, benachrichtigungsIntervall, deferredPrompt;
+let minutes = 0;
+let seconds = 0;
+let interval = null;
+let isRunning = false;
+let mode = localStorage.getItem('mode') || 'timer';
+let wakeLock = null;
 
-const $ = id => document.getElementById(id);
-const startBtn = $("startBtn");
-const stopBtn = $("stopBtn");
-const speichernBtn = $("speichernBtn");
-const installBtn = $("installBtn");
-const begruessung = $("begruessung");
-const zeitAnzeige = $("zeitAnzeige");
-const modusBtn = $("modusBtn");
-const logTabelle = $("logTabelle");
-const logBody = $("logBody");
-const pingSound = $("pingSound");
+const minutesEl = document.getElementById('minutes');
+const secondsEl = document.getElementById('seconds');
+const startBtn = document.getElementById('startBtn');
+const pauseBtn = document.getElementById('pauseBtn');
+const resetBtn = document.getElementById('resetBtn');
+const toggleModeBtn = document.getElementById('toggleModeBtn');
+const currentModeEl = document.getElementById('currentMode');
 
-const SPEICHER = "arbeitszeit_logs";
-
-if (!window.matchMedia('(display-mode: standalone)').matches) {
-  begruessung.classList.remove("hidden");
-  installBtn.classList.remove("hidden");
+// State laden
+function loadState() {
+  const saved = JSON.parse(localStorage.getItem('timerState'));
+  if (saved) {
+    minutes = saved.minutes;
+    seconds = saved.seconds;
+    mode = saved.mode;
+    updateDisplay();
+    currentModeEl.textContent = `Aktueller Modus: ${mode === 'timer' ? 'Timer' : 'Stoppuhr'}`;
+  }
 }
 
-window.addEventListener("beforeinstallprompt", e => {
-  e.preventDefault();
-  deferredPrompt = e;
-  installBtn.classList.remove("hidden");
-});
+// State speichern
+function saveState() {
+  localStorage.setItem('timerState', JSON.stringify({ minutes, seconds, mode }));
+  localStorage.setItem('mode', mode);
+}
 
-installBtn.addEventListener("click", () => {
-  if (!deferredPrompt) return;
-  deferredPrompt.prompt();
-  deferredPrompt.userChoice.then(() => {
-    begruessung.classList.add("hidden");
-    installBtn.classList.add("hidden");
-  });
-});
+function updateDisplay() {
+  minutesEl.textContent = String(minutes).padStart(2, '0');
+  secondsEl.textContent = String(seconds).padStart(2, '0');
+}
 
-startBtn.addEventListener("click", () => {
-  startZeit = new Date();
-  updateAnzeige();
-  startBtn.disabled = true;
-  stopBtn.disabled = false;
-  Notification.requestPermission();
-  benachrichtigungsIntervall = setInterval(() => {
-    if (Notification.permission === "granted") {
-      new Notification("⏰ Erinnerung: Bitte Pause einlegen!");
-      pingSound.play();
+function tick() {
+  if (mode === 'timer') {
+    if (minutes === 0 && seconds === 0) {
+      clearInterval(interval);
+      isRunning = false;
+      releaseWakeLock();
+      return;
     }
-  }, 15 * 60 * 1000);
+    if (seconds === 0) {
+      minutes--;
+      seconds = 59;
+    } else {
+      seconds--;
+    }
+  } else {
+    seconds++;
+    if (seconds === 60) {
+      minutes++;
+      seconds = 0;
+    }
+  }
+  updateDisplay();
+  saveState();
+}
+
+startBtn.addEventListener('click', () => {
+  if (!isRunning) {
+    interval = setInterval(tick, 1000);
+    isRunning = true;
+    requestWakeLock();
+  }
 });
 
-stopBtn.addEventListener("click", () => {
-  endZeit = new Date();
-  updateAnzeige();
-  stopBtn.disabled = true;
-  speichernBtn.disabled = false;
-  clearInterval(benachrichtigungsIntervall);
-  pingSound.pause();
-  pingSound.currentTime = 0;
-  speichernBtn.click();
+pauseBtn.addEventListener('click', () => {
+  clearInterval(interval);
+  isRunning = false;
+  releaseWakeLock();
 });
 
-speichernBtn.addEventListener("click", () => {
-  const checked = [...document.querySelectorAll("#checkboxContainer input:checked")];
-  const aufgaben = checked.map(cb => cb.value).join(", ") || "–";
-  const dauer = berechneDauer(startZeit, endZeit);
-  const eintrag = {
-    datum: startZeit.toLocaleDateString(),
-    start: startZeit.toLocaleTimeString(),
-    stop: endZeit.toLocaleTimeString(),
-    dauer,
-    aufgaben
-  };
-
-  const logs = JSON.parse(localStorage.getItem(SPEICHER) || "[]");
-  logs.push(eintrag);
-  localStorage.setItem(SPEICHER, JSON.stringify(logs));
-
-  speichernBtn.disabled = true;
-  startBtn.disabled = false;
-  zeitAnzeige.textContent = "Startzeit: --:-- | Endzeit: --:-- | Dauer: 0 h 0 m";
+resetBtn.addEventListener('click', () => {
+  clearInterval(interval);
+  isRunning = false;
+  minutes = 0;
+  seconds = 0;
+  updateDisplay();
+  saveState();
+  releaseWakeLock();
 });
 
-modusBtn.addEventListener("click", () => {
-  const logs = JSON.parse(localStorage.getItem(SPEICHER) || "[]");
-  logBody.innerHTML = "";
-  if (logs.length === 0) return alert("Noch keine Einträge vorhanden.");
-  logs.forEach(e => {
-    const row = document.createElement("tr");
-    ["datum", "start", "stop", "dauer"].forEach(key => {
-      const td = document.createElement("td");
-      td.textContent = e[key];
-      row.appendChild(td);
+toggleModeBtn.addEventListener('click', () => {
+  mode = mode === 'timer' ? 'stopwatch' : 'timer';
+  currentModeEl.textContent = `Aktueller Modus: ${mode === 'timer' ? 'Timer' : 'Stoppuhr'}`;
+  resetBtn.click(); // reset on mode switch
+  saveState();
+});
+
+function requestWakeLock() {
+  if ('wakeLock' in navigator) {
+    navigator.wakeLock.request('screen')
+      .then(lock => {
+        wakeLock = lock;
+        wakeLock.addEventListener('release', () => {
+          console.log('Wake Lock released');
+        });
+      })
+      .catch(err => console.error('Wake Lock Error:', err));
+  }
+}
+
+function releaseWakeLock() {
+  if (wakeLock) {
+    wakeLock.release().then(() => {
+      wakeLock = null;
     });
-    const tdBtn = document.createElement("td");
-    const btn = document.createElement("button");
-    btn.textContent = "Details";
-    btn.onclick = () => alert(`Aufgaben:\n${e.aufgaben}`);
-    tdBtn.appendChild(btn);
-    row.appendChild(tdBtn);
-    logBody.appendChild(row);
-  });
-  logTabelle.classList.remove("hidden");
-});
-
-function updateAnzeige() {
-  const s = startZeit ? startZeit.toLocaleTimeString() : "--:--";
-  const e = endZeit ? endZeit.toLocaleTimeString() : "--:--";
-  const d = (startZeit && endZeit) ? berechneDauer(startZeit, endZeit) : "0 h 0 m";
-  zeitAnzeige.textContent = `Startzeit: ${s} | Endzeit: ${e} | Dauer: ${d}`;
+  }
 }
 
-function berechneDauer(a, b) {
-  const ms = Math.max(0, b - a);
-  const h = Math.floor(ms / 3600000);
-  const m = Math.floor((ms % 3600000) / 60000);
-  return `${h} h ${m} m`;
-}
+// Alle 30 Sekunden ein Ping, damit die App aktiv bleibt
+setInterval(() => {
+  console.log('App aktiv');
+}, 30000);
 
+// PWA Setup
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register("service-worker.js")
-    .then(() => console.log("✅ Service Worker registriert"))
-    .catch(err => console.error("❌ Fehler beim Registrieren:", err));
+  navigator.serviceWorker.register('service-worker.js')
+    .then(() => console.log('Service Worker registriert'))
+    .catch(err => console.error('SW Fehler:', err));
 }
+
+loadState();
