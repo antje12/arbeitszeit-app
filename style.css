@@ -1,38 +1,102 @@
 body {
   margin: 0;
-  font-family: Arial, sans-serif;
-  background-color: #000;
+  background-color: #1a1a1a;
   color: #fff;
+  font-family: 'Segoe UI', sans-serif;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
-  height: 100vh;
-}
-
-.container {
-  text-align: center;
   padding: 20px;
 }
 
-.timer {
-  font-size: 4em;
-  margin-bottom: 20px;
-}
+h1 { font-size: 26px; margin-bottom: 15px; color: #e91e63; text-align: center; }
 
-.controls button,
-.mode button {
-  background: none;
-  border: 2px solid #fff;
-  color: #fff;
-  padding: 10px 20px;
+button {
+  font-size: 18px;
+  padding: 12px;
   margin: 5px;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
   cursor: pointer;
-  font-size: 1em;
-  border-radius: 10px;
-  transition: 0.2s;
 }
 
-.controls button:hover,
-.mode button:hover {
-  background-color: #333;
+#installBtn { background-color: #9c27b0; }
+#startBtn { background-color: #4caf50; }
+#stopBtn { background-color: #f44336; }
+#speichernBtn { background-color: #03a9f4; width:100%; max-width:360px; }
+
+.zeitAnzeige {
+  font-size: 18px;
+  margin: 10px;
+  color: #ffc107;
+  text-align: center;
+}
+
+.aufgabenliste {
+  width:100%;
+  max-width:360px;
+  margin:15px 0;
+}
+
+.aufgabenliste h2 {
+  font-size:22px;
+  color:#ff9800;
+  text-align:center;
+  margin-bottom:10px;
+}
+
+.checkboxContainer {
+  background:#292929;
+  border-radius:10px;
+  padding:15px;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+
+.checkboxContainer label {
+  font-size:17px;
+}
+
+.steuerung {
+  width:100%;
+  max-width:360px;
+  display:flex;
+  justify-content:space-between;
+  gap:5px;
+}
+
+#logTabelle {
+  width:100%;
+  max-width:360px;
+}
+
+#logTabelle table {
+  width:100%;
+  border-collapse:collapse;
+  background:#292929;
+  border-radius:10px;
+  overflow:hidden;
+}
+
+#logTabelle th, #logTabelle td {
+  padding:8px;
+  font-size:14px;
+  text-align:left;
+}
+
+#logTabelle th {
+  background:#414141;
+}
+
+#logTabelle td {
+  border-top:1px solid #414141;
+}
+
+.detailsBtn {
+  background:#03a9f4;
+  font-size:14px;
+  padding:4px 8px;
+  border-radius:5px;
 }
