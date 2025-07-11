@@ -4,7 +4,7 @@ const stopBtn = document.getElementById("stopBtn");
 const speichernBtn = document.getElementById("speichernBtn");
 const zeitAnzeige = document.getElementById("zeitAnzeige");
 
-// Start-Button
+// Start
 startBtn.addEventListener("click", () => {
   startZeit = new Date();
   updateAnzeige();
@@ -12,7 +12,7 @@ startBtn.addEventListener("click", () => {
   stopBtn.disabled = false;
 });
 
-// Stopp-Button
+// Stop
 stopBtn.addEventListener("click", () => {
   endZeit = new Date();
   updateAnzeige();
@@ -20,7 +20,7 @@ stopBtn.addEventListener("click", () => {
   speichernBtn.disabled = false;
 });
 
-// Speichern-Button
+// Speichern
 speichernBtn.addEventListener("click", () => {
   const checkboxes = document.querySelectorAll("#checkboxContainer input:checked");
   const aufgaben = Array.from(checkboxes).map(cb => cb.value).join(", ");
@@ -30,7 +30,6 @@ speichernBtn.addEventListener("click", () => {
   const endStr = endZeit.toLocaleTimeString();
 
   const zeile = `${datum} | ${startStr} | ${endStr} | ${dauer} | ${aufgaben}`;
-
   const blob = new Blob([zeile + "\n"], { type: "text/plain;charset=utf-8" });
   const link = document.createElement("a");
   link.href = URL.createObjectURL(blob);
@@ -56,7 +55,7 @@ function berechneDauer(start, end) {
   return `${h} h ${m} m`;
 }
 
-// ===== PWA INSTALLATION =====
+// === PWA Install ===
 let deferredPrompt;
 const installBtn = document.getElementById("installBtn");
 
