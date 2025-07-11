@@ -10,13 +10,17 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <h1 id="begruessung" style="display: none;">💪 Hallo und willkommen, Power‑Girl!</h1>
+
+  <!-- Begrüßung -->
+  <h1 id="begruessung">💪 Hallo und willkommen, Power‑Girl!</h1>
   <button id="installBtn" style="display: none;">📲 App downloaden</button>
 
+  <!-- Zeitanzeige -->
   <div class="zeitAnzeige" id="zeitAnzeige">
     Startzeit: --:-- | Endzeit: --:-- | Dauer: 0 h 0 m
   </div>
 
+  <!-- Aufgabenbereich -->
   <div class="aufgabenliste">
     <h2>Deine Aufgaben</h2>
     <div class="checkboxContainer" id="checkboxContainer">
@@ -30,17 +34,19 @@
     </div>
   </div>
 
+  <!-- Speicher-Button -->
   <button id="speichernBtn" disabled>💾 Speichern</button>
 
+  <!-- Steuerung -->
   <div class="steuerung">
     <button id="startBtn">▶ Start</button>
     <button id="stopBtn" disabled>⏹ Stopp</button>
     <button id="modusBtn">📊 Modus wechseln</button>
   </div>
 
-  <!-- Tabelle zur Auswertung -->
-  <div id="auswertung" style="display: none; max-width: 100%; width: 360px; margin-top: 20px;">
-    <table id="ergebnisTabelle" border="1" style="width: 100%; background: #333; color: white;">
+  <!-- Auswertungsansicht -->
+  <div id="auswertung" style="display: none;">
+    <table>
       <thead>
         <tr>
           <th>Datum</th>
@@ -48,21 +54,15 @@
           <th>Ende</th>
           <th>Dauer</th>
           <th>Details</th>
+          <th>Löschen</th>
         </tr>
       </thead>
-      <tbody></tbody>
+      <tbody id="eintraegeBody">
+        <!-- Einträge werden hier dynamisch eingefügt -->
+      </tbody>
     </table>
-    <div id="offeneStundenAnzeige" style="margin-top: 10px; color: #ffc107;"></div>
+    <div id="offeneStundenAnzeige"></div>
   </div>
-
-  <!-- Pop-up für Details -->
-  <div id="detailsPopup" style="display:none; position:fixed; top:20%; left:10%; right:10%; background:#222; color:white; padding:20px; border-radius:10px; box-shadow:0 0 10px #000;">
-    <h3>Aufgaben Details</h3>
-    <p id="detailsInhalt"></p>
-    <button onclick="document.getElementById('detailsPopup').style.display='none'">Schließen</button>
-  </div>
-
-  <audio id="alarmTon" src="alarm.mp3" preload="auto"></audio>
 
   <script src="script.js"></script>
 </body>
